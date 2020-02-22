@@ -137,7 +137,7 @@ struct ButtonForMainView: View{
     @Binding  var showImagePicker: Bool
     @Binding var image:Image?
     @Binding var frombtn:Int
-    
+    @State var showExitCheckAlert: Bool = false
     var body: some View{
         VStack{
             Spacer()
@@ -166,9 +166,10 @@ struct ButtonForMainView: View{
             Spacer().frame(width: 0, height: 20)
             NavigationLink(destination: ExitView(frombtn: $frombtn, isFirstViewActive: $isActive), isActive: $isActive) {
                 Button(action: {
-                    self.isActive = true
-                    self.frombtn = 4
-                    self.showImagePicker = true
+//                    self.isActive = true
+//                    self.frombtn = 4
+//                    self.showImagePicker = true
+                    self.showExitCheckAlert = true
                 }, label: {
                     Text("最終 退場")
                 }).padding()
@@ -176,6 +177,15 @@ struct ButtonForMainView: View{
                     .font(.system(size: 40))
                     .foregroundColor(Color.white)
                     .cornerRadius(90)
+                .alert(isPresented: $showExitCheckAlert) {
+                    Alert(title: Text("NFC顔データ登録"), message:
+                      Text("下記の項目を実施しましたか：SE席（消灯）,事務室（消灯）,会議室（消灯）,社長室（消灯）,給湯室（消灯）,ジュレッダ（切電）,電気ポット（切電）,入口施錠,エントランス消灯,鍵返却,窓,監視カメラ"),
+                          primaryButton: .default(Text("確認")) {
+                             self.frombtn = 4
+                            self.showImagePicker = true
+                                          }
+                        ,secondaryButton: .default(Text("キャンセル")))
+                }
             }
             Spacer().frame(width: 0, height: 60)
         }.frame(width: 150, height: 520)
